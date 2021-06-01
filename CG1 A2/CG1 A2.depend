@@ -1,0 +1,7 @@
+# depslib dependency file v1.0
+1622570765 source:c:\users\bahaa osama\desktop\cg1 a2\main.cpp
+	<tchar.h>
+	<windows.h>
+	<math.h>
+	<bits/stdc++.h>
+
