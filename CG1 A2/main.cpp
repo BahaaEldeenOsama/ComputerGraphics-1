@@ -113,10 +113,45 @@ void midpoint(HDC hdc,int xc,int yc,int r,COLORREF color)
 
 
 
+void Draw8points2(HDC hdc,int x,int y,int xc,int yc,COLORREF color)
+{
+    SetPixel(hdc, xc+x, yc+y, color);
+    SetPixel(hdc, xc-x, yc+y, color);
+      //SetPixel(hdc, xc+x, yc-y, color);
+      //SetPixel(hdc, xc-x, yc-y, color);
+    SetPixel(hdc, xc-y, yc+x, color);
+      //SetPixel(hdc, xc+y, yc-x, color);
+    SetPixel(hdc, xc+y, yc+x, color);
+      //SetPixel(hdc, xc-y, yc-x, color);
+}
+void midpoint2(HDC hdc,int xc,int yc,int r,COLORREF color)
+{
+    int x=0;
+    int y=r;
+    double d=1-r;
+    while(x<y){
+
+        if(d<=0){
+            d=d+2*x+3;
+            x++;
+        }
+        else{
+            d=d+2*(x-y)+5;
+            x++;
+            y--;
+        }
+        Draw8points2(hdc,x,y,xc,yc,color);
+    }
+
+}
+
+
+
 /*  This function is called by the Windows function DispatchMessage()  */
 int rr, x_1, y_1, x_2, y_2; /// For first circle
 int rr2, xx_1, yy_1, xx_2, yy_2; /// For second circle (first eye).
 int rr3, xxx_1, yyy_1, xxx_2, yyy_2; /// For second circle (second eye).
+int Xx, Yy, Xx2, Yy2, Rr; /// For Smile (second eye).
 int cnt=0;
 LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -175,14 +210,20 @@ LRESULT CALLBACK WindowProcedure (HWND hwnd, UINT message, WPARAM wParam, LPARAM
                  midpoint(hdc, xxx_1, yyy_1, rr3,RGB(0,0,255));
                  ++cnt;
             }
-            /// 2 clicks for the half circle (Shape’s Smile)  ->> Twatiy
+            /// 2 clicks for the half circle (Shape’s Smile)  ->> Tawaty
             else if(cnt == 6)
             {
-
+                  Xx = LOWORD(lParam);
+                  Yy = HIWORD(lParam);
+                  ++cnt;
             }
             else if(cnt == 7)
             {
-
+                  Xx2 = LOWORD(lParam);
+                  Yy2 = HIWORD(lParam);
+                  Rr  = sqrt(pow((Xx2 - Xx), 2) + pow((Yy2 - Yy), 2));
+                  midpoint2(hdc, Xx, Yy, Rr,RGB(0,155,55));
+                  ++cnt;
             }
             /// 2clicks for line 1(Hair of the shape)  ->> Abdelrahman
              else if(cnt == 8)
